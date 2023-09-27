@@ -314,13 +314,28 @@ def get_enc_input_scalings(
 
 
 def main():
+    print("[INFO]: === Welcome to DP-MEPF ===")
+
+    print("[INFO]: Parsing command line arguments... ", end="")
     arg = get_args()
+    print("DONE")
+
+    print("[INFO]: Creating logging directories... ", end="")
     os.makedirs(arg.log_dir, exist_ok=True)
     os.makedirs(os.path.join(arg.log_dir, "images/"), exist_ok=True)
     os.makedirs(os.path.join(arg.log_dir, "tensorboard/"), exist_ok=True)
+    print("DONE")
+
+    print("[INFO]: Logging arguments... ", end="")
     log_args(arg)
+    print("DONE")
+
     device = pt.device("cuda:0" if pt.cuda.is_available() else "cpu")
+    print(f"[INFO]: Got Pytorch device {device}")
+
     dp_params, val_dp_params, event_steps = get_param_group_tuples(arg)
+    print("[INFO]: DP Params:", dp_params)
+
     if not arg.no_io_files:
         route_io_to_file(arg.log_dir, arg.stdout_file, arg.stderr_file)
     configure_logger(arg.log_importance_level)

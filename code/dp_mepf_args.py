@@ -14,8 +14,7 @@ def get_args():
   parser = argparse.ArgumentParser()
 
   # PARAMS YOU LIKELY WANT TO SET
-  parser.add_argument('--dataset', default='cifar10', choices=['cifar10', 'lsun', 'celeba',
-                                                               'dmnist', 'fmnist'])
+  parser.add_argument('--dataset', default='cifar10', choices=['cifar10', 'lsun', 'celeba', 'celebahq', 'dmnist', 'fmnist'])
   parser.add_argument('--n_iter', type=int, default=100_000, help='number of generator updates')
   parser.add_argument('--n_gpu', type=int, default=1, help='number of GPUs to use')
   parser.add_argument('--net_enc', nargs='*', default=['models/vgg19.pt'],
@@ -241,7 +240,7 @@ def set_arg_dependencies(arg):
     assert arg.restart_iter % arg.ckpt_iter == 0, 'restart_iter must be multiple of ckpt_iter'
   assert arg.new_ckpt_iter % arg.ckpt_iter == 0, 'new_ckpt_iter must be multiple of ckpt_iter'
 
-  pretrain_assignments = {'cifar10': 'imagenet', 'lsun': 'imagenet', 'celeba': 'imagenet',
+  pretrain_assignments = {'cifar10': 'imagenet', 'lsun': 'imagenet', 'celeba': 'imagenet', 'celebahq': 'imagenet',
                           'dmnist': 'svhn', 'fmnist': 'cifar10_pretrain'}
   if arg.pretrain_dataset is None:
     arg.pretrain_dataset = pretrain_assignments[arg.dataset]

@@ -52,7 +52,8 @@ def log_iteration(exp_name, iteration, is_final=False, log_file=None):
 
 def get_base_log_dir():
   logdir_candidates = ['/home/fharder/dp-gfmn/logs/',
-                       '/home/frederik/PycharmProjects/dp-gfmn/logs/']
+                       '/home/frederik/PycharmProjects/dp-gfmn/logs/',
+                       '/scratch/dpmepf']
   default_base_dir = os.path.normpath(os.path.join(os.getcwd(), '../logs'))
   if os.path.exists(default_base_dir):
     return default_base_dir
@@ -207,7 +208,7 @@ def log_synth_data_eval(net_gen, writer, step, noise_maker, device, dataset, syn
 
   score_ser = pd.Series({}, name=step)
 
-  if dataset in {'cifar10', 'celeba', 'lsun'}:  # skip for mnist
+  if dataset in {'cifar10', 'celeba', 'celebahq', 'lsun'}:  # skip for mnist
     LOG.info(f'FID eval')
     # fid_score = get_fid_scores(syn_data_file, dataset, device, fid_dataset_size,
     #                            image_size, center_crop_size, data_scale, batch_size=batch_size)

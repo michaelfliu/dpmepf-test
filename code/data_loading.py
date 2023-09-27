@@ -6,6 +6,8 @@ import torchvision.transforms as transforms
 import torchvision.datasets as dset
 import numpy as np
 
+from celebahq import CelebAHQ
+
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_SDEV = [0.229, 0.224, 0.225]
 CIFAR10_MEAN = [0.4914, 0.482, 0.447]
@@ -36,20 +38,25 @@ def scale_transform(data_scale):
 def load_dataset(dataset_name, image_size, center_crop_size, dataroot, batch_size,
                  n_workers, data_scale, labeled=False, test_set=False):
 
-    if dataset_name in ['celeba']:
+    if dataset_name == 'celebahq':
+        n_classes = 2
+        dataset = CelebAHQ(
+            split="test" if test_set else "train",
+            target_type="class",
+            size=image_size,
+            class_attrs=["Male"]
+        )
+    elif dataset_name in ['celeba']:
         n_classes = None
         transformations = []
         if center_crop_size > image_size:
-            transformations.extend([transforms.CenterCrop(center_crop_size),
-                                    transforms.Resize(image_size)])
+            transformations.extend([transforms.CenterCrop(center_crop_size), transforms.Resize(image_size)])
         else:
-            transformations.extend([transforms.Resize(image_size),
-                                    transforms.CenterCrop(center_crop_size)])
-
+            transformations.extend([transforms.Resize(image_size), transforms.CenterCrop(center_crop_size)])
         transformations.extend([transforms.ToTensor(), scale_transform(data_scale)])
 
         # folder dataset
-        dataset = dset.ImageFolder(root=os.path.join(dataroot, 'img_align_celeba'),
+        dataset = dset.ImageFolder(root=os.path.join(dataroot, 'img_align_celeba_png'),
                                    transform=transforms.Compose(transformations))
     elif dataset_name == 'lsun':
         n_classes = None
@@ -93,7 +100,7 @@ def load_dataset(dataset_name, image_size, center_crop_size, dataroot, batch_siz
     else:
         n_classes = None
 
-    dataloader = pt.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=int(n_workers))
+    dataloader = pt.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
     return dataloader, n_classes
 
