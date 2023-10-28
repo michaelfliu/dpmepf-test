@@ -222,7 +222,7 @@ def log_synth_data_eval(net_gen, writer, step, noise_maker, device, dataset, syn
 
     score_ser['fid'] = fid_score
 
-  if dataset in {'cifar10', 'celeba', 'lsun'}:
+  if dataset in {'cifar10', 'celeba', 'celebahq', 'lsun'}:
     pretrained = True
     # running MNIST with pretrained=False should be possible.
     # the only problem right now is that vgg16 requires input HW of 32 at minimum and MNIST has 28
